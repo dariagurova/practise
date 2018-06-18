@@ -11,97 +11,104 @@ struct s_node {
 typedef struct s_node s_node;
 typedef struct s_queue s_queue;
 
-s_node	*init_node(void* item)
+s_queue *init(void)
 {
+	s_queue *q;
+	q = malloc(sizeof(s_queue));
+	q->first = NULL;
+	q->last = NULL;
+	return(q);
+}
+
+s_node *initNode(void* val)
+{
+	s_node *new;
+	new = malloc(sizeof(s_node));
+	new->content = val;
+	new->next = NULL;
+	return (new);
+}
+
+s_node	*add(s_node *list, void *val)
+{
+
+	if (!list)
+		return(NULL);
 	s_node *tmp;
-	tmp = malloc(sizeof(s_node));
-	tmp->content = item;
-	tmp->next=NULL;
+	tmp = initNode(val);
+	while (list->next)
+	{
+		list = list->next;
+	}
+	list->next = tmp;
 	return(tmp);
 }
 
-s_queue	*init()
+void enqueue(s_queue *queue, void *content)
 {
-	s_queue *init;
-	init = malloc(sizeof(s_queue));
-	init->first = NULL;
-	init->last = NULL;
-	return (init);
+	s_node *ad;
+	if (!queue)
+		queue = init();
+	if (!queue->first || !queue->last)
+	{	
+		ad = initNode(content);
+		queue->first = ad;
+		queue->last = ad;
+
+	} 
+	else
+	{
+		ad = add(queue->last,content);
+		queue->last = ad;
+	}
 }
 
-void	enqueue(s_queue *queue, void *content)
-{
-	s_node *new_node;
-	new_node = init_node(content);
-	if (!queue->first || !queue->last )
-	{
-		queue->first = new_node;
-		queue->last = new_node;
-	return;
-	}
-	s_node *temp;
-	temp = queue->last;
-	temp->next = new_node;
-	queue->last = new_node;
-	return;
-}
 int isEmpty(s_queue *queue)
 {
-	if (!queue->first || !queue->last)
+	if (!queue)
 		return (1);
-	return (0);
-}
 
-void *peek(struct s_queue *queue)
-{
-	if(isEmpty(queue))
-		return (NULL);
-	s_node *tmp;
-	tmp = queue->first;
-	void* item = tmp->content;
-	return (item);
-}
+	return(!queue->last);
 
-void	*dequeue(s_queue *queue)
+}
+void *peek(s_queue *queue)
 {
-	if(isEmpty(queue))
+	if (isEmpty(queue))
 		return (NULL);
+	return(queue->first->content);
+
+}
+void *dequeue(s_queue *queue)
+{
+	void *val;
 	s_node *tmp;
+	if (!queue || !queue->first)
+		return (NULL);
 	tmp = queue->first;
-	queue->first=tmp->next;
-	void* item = tmp->content;
-	free(tmp);
-	if(!queue->first)
+	queue->first = tmp->next;
+	if (!queue->first)
 		queue->last = NULL;
-	return (item);
+	val = tmp->content;
+	
+	free(tmp);
+	return (val);
 }
 
-int main()
+int main ()
 {
-	int item = 87;
-	int item1 = 23;
-	int item2 = 21;
-	int tmp;
-    void* deq;
-    s_queue *queue = init();
-    enqueue(queue,(void*)&item);
-    enqueue(queue,(void*)&item1);
-    deq = dequeue(queue);
-    deq = dequeue(queue);
-    deq = dequeue(queue);
-    if (!tmp)
-    	return(0);
-    tmp= *((int*)deq);
-	printf("%d\n",tmp);
-	return (0);
+	s_queue *q = init();
+	int f = 45;
+	int k = 2;
+	void *l;
+	enqueue(q,(void*)&f);
+	enqueue(q,(void*)&k);
+	l = dequeue(q);
+	printf("%d\n", *(int*)l);
+	l = dequeue(q);
+	printf("%d\n", *(int*)l);
+	l = dequeue(q);
+	printf("%d\n", *(int*)l);
+
+	return(0);
+
 }
-
-
-
-
-
-
-
-
-
-
