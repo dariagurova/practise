@@ -1,102 +1,79 @@
 #include <stdlib.h>
 #include <stdio.h>
-struct s_node {
-        void          *content;
-        struct s_node *next;
-    };
-struct s_stack {
-        struct s_node *top;
-    };
 
-typedef struct s_stack s_stack; 
-typedef struct s_node s_node; 
+	struct s_node {
+		void          *content;
+		struct s_node *next;
+	};
 
+	struct s_stack {
+		struct s_node *top;
+	};
 
-s_stack	*init()
+struct s_stack *init(void)
 {
-	s_stack *temp;
-
-	temp = malloc(sizeof(s_stack));
-	temp->top = NULL;
-	return (temp);
-}
-
-void push(s_stack *stack, void *item)
-{
-	s_node * node;
-	node=malloc(sizeof(s_node));
-	node->content = item;
-	node->next = stack->top;
-	stack->top = node;
-}
-
-void* pop(s_stack *stack)
-{
-	s_node *tmp;
-	void *c;
-	if (!stack || !stack->top )
-	{	printf("Error:stack\n");
-		exit(0);
-	}
-	tmp = stack->top;
-	c = tmp->content;
-	stack->top = tmp->next;
-	free(tmp);
-	return (c);
-}
-void* peek(struct s_stack *stack) 
-{	
-	if (!stack || !stack->top )
-	{	printf("Error:stack\n");
-		exit(0);
-	}
-	return stack->top->content;
-}
-
-int isEmpty(struct s_stack *stack) 
-{
-	if (!stack->top)
-		return 1;
-	return 0;
+	struct s_stack *st;
+	st = malloc(sizeof(struct s_stack));
+	st->top = NULL;
+	return (st);
 }
 
 
-int main()
+void	push(struct s_stack *stack, void *content)
 {
-	s_stack *st;
-	st=init();
-	
-	void *tmp;
-	int i=666;
-	tmp= (void*)(&i);
-	push(st,tmp);
-	
-	void *tmp2;
-	int i2=667;
-	tmp2= (void*)(&i2);
-	push(st,tmp2);
-	
-	void *tmp3;
-	int i3=668;
-	tmp3= (void*)(&i3);
-	push(st,tmp3);
+	if (!stack)
+		return;
+	struct s_node *new;
 
-	void *tmp1;
-	tmp1=pop(st);
-	printf("output %d\n", (*(int *)tmp1));
+	new = malloc(sizeof(struct s_node));
+	new->content = content;
+	new->next = stack->top;
+	stack->top = new;
+}
 
-	tmp1=pop(st);
-	printf("output %d\n", (*(int *)tmp1));
-
-	tmp1=peek(st);
-	printf("output %d\n", (*(int *)tmp1));
-
-	tmp1=pop(st);
-	printf("output %d\n", (*(int *)tmp1));
-
-	tmp1=pop(st);
-	printf("output %d\n", (*(int *)tmp1));
-	
-
+int isEmpty(struct s_stack *stack)
+{
+	if (!stack || !stack->top)
+		return (1);
 	return (0);
 }
+
+void *peek(struct s_stack *stack)
+{
+	if(!stack->top)
+		return (NULL);
+	return(stack->top->content);
+}
+
+void *pop(struct s_stack *stack)
+{
+	if (!stack || !stack->top)
+		return (NULL);
+	struct s_node *tmp;
+	void* item;
+	tmp = stack->top;
+	item = tmp->content;
+	stack->top = tmp->next;
+//	if (!stack->top)
+//		return (NULL);
+	free(tmp);
+	return (item);
+
+}
+ int main ()
+ {
+ 	struct s_stack *st;
+ 	st = init();
+
+ 	int i = 87;
+ 	int j = 23;
+
+ 	push(st, (void*)(&i));
+ 	push(st, (void*)(&j));
+
+ 	void* pop1 = pop(st);
+ 	printf("%d\n", (*(int*)pop1));
+ 	pop1 = pop(st);
+ 	printf("%d\n", (*(int*)pop1));
+ 	return (0);
+ }
