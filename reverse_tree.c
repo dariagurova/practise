@@ -11,130 +11,84 @@ typedef struct s_node s_node;
 
 s_node *init(int val)
 {
+	s_node *root;
+	root = malloc(sizeof(s_node));
+	root->value = val;
+	root->right = NULL;
+	root->left = NULL;
+	return(root);
+}
+
+s_node *addleft(s_node *root, int val)
+{
+	root->left = init(val);
+	return(root->left);
+}
+s_node *addright(s_node *root, int val)
+{
+	root->right = init(val);
+	return(root->right);
+}
+
+void	printer(s_node *root,int level)
+{
+	printf("value:%d  level : %d\n ", root->value, level);
+	if (root->left){
+		printf("left:\n");
+		printer(root->left,level+1);
+	}
+	else
+		printf("left is NULL\n");
+	if(root->right){
+		printf("right:\n");
+		printer(root->right, level+1);
+	}
+	else
+		printf("right is NULL\n");
+ 	printf("exit value:%d  level : %d\n",root->value, level);
+}
+
+
+void	swap(s_node *root)
+{
 	s_node *tmp;
-	tmp = malloc(sizeof(s_node));
-	tmp->value = val;
-	tmp->right=NULL;
-	tmp->left=NULL;
-	return(tmp);
+	tmp = root->right;
+	root->right = root->left;
+	root->left = tmp;
 }
 
-s_node*	add_left(s_node *parent, int val)
+void	reverse(s_node *root)
 {
-	if(!parent)
-		return(NULL);
-	s_node *tmp = init(val);
-	parent->left = tmp;
-	return(parent->left);
-}
-
-s_node*	add_right(s_node *parent, int val)
-{
-	if(!parent)
-		return(NULL);
-	s_node *tmp = init(val);
-	parent->right = tmp;
-	return(parent->right);
-}
-
-void	printer(s_node *parent)
-{
-	if (!parent)
+	if (!root)
+		return;
+	if (root->left)
 	{
-		printf("node is null\n");
-		return;
+		reverse(root->left);
 	}
-	printf("Parent value: %d\n", parent->value);
-	if (!parent->left)
-		printf("left node is null\n");
-	else
-		printf("Left child: %d\n", parent->left->value);
-	if (!parent->right)
-		printf("right node is null\n");
-	else
-		printf("Right child: %d\n", parent->right->value);
-
-}
-
-void	printer_bot(s_node *parent,int level)
-{
-	printf("level :%d ",level);
-	if (!parent)
+	if (root->right)
 	{
-		printf("node is null\n");
-		return;
+		reverse(root->right);
 	}
-	printf("node value: %d\n", parent->value);
-	printf("go left \n");
-	printer_bot(parent->left,level+1);
-	printf("go right \n");
-	printer_bot(parent->right,level+1);
-	printf("level up\n");
-	
+
+swap(root);
 }
 
-
-void	ft_swap(s_node *n1, s_node *n2)
+int main ()
 {
-	s_node *tmp = init(0);
-	*tmp = *n1;
-	*n1 = *n2;
-	*n2 = *tmp;
-	free(tmp);
+	s_node *root = init(94);
+	s_node *l = addleft(root,34);
+	s_node *r = addright(root,52);
+	s_node *l1 = addleft(l,1);
+	s_node *r1 = addright(l,99);
+	s_node *l2 = addleft(l1,20);
+	s_node *l3 = addleft(r1,83);
+	s_node *r3 = addright(r1,39);
+	s_node *r5 = addright(l3,61);
+	s_node *l4 = addleft(r3,37);
+	s_node *r4 = addright(r3,67);
+	printer(root, 0);
+	reverse(root);
+	printf("******************");
+	printer(root, 0);
+	return (0);
 }
-void	reverse_tree(s_node *tree)
-{
-	if (!tree)
-		return;
-	if (!(tree->left || tree->right))
-		return;
-	if (!tree->left)
-	{
-		reverse_tree(tree->right);
-		tree->left=tree->right;
-		tree->right=NULL;
-		return;
-	}
-	if (!tree->right)
-	{
-		reverse_tree(tree->left);
-		tree->right = tree->left;
-		tree->left=NULL;
-		return;
-	}
-	reverse_tree(tree->left);
-	reverse_tree(tree->right);
-	ft_swap(tree->left, tree->right);
-}
-
-int main (void)
-{
-	s_node *tree = init(94);
-	s_node *n1 = add_right(tree, 52);
-	s_node *n2 = add_left(tree,34);
-	s_node *n3 = add_left(n2, 1);
-	s_node *n4 = add_right(n2, 99);
-	s_node *n5 = add_left(n3, 20);
-	s_node *n6 = add_left(n4, 83);
-	s_node *n7 = add_right(n4, 39);
-	s_node *n8 = add_right(n6, 61);
-	s_node *n9 = add_right(n7, 67);
-	s_node *n10 = add_left(n7, 37);
-	
-	printer_bot(tree,0);
-	printf("++++++++++++++++++++++++++\n");
-
-	reverse_tree(tree);
-	printer_bot(tree,0);
-	/*printer(n2);
-	printer(n4);
-	printer(n3);
-	printer(n6);
-	printer(n7);
-	re*/
-	return(0);
-}
-
-
-
-
