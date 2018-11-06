@@ -1,16 +1,5 @@
 #include <stdio.h>
 
-int	compare(int *ah, int *bh)
-{
-	int i = 0;
-	while (i < 255)
-	{
-		if (ah[i] != bh[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 int	is_anagram(char *a, char *b)
 {
